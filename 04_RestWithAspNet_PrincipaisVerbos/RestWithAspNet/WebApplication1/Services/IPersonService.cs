@@ -1,6 +1,13 @@
-﻿namespace RestWithAspNet.Services
+﻿using RestWithAspNet.Model;
+
+namespace RestWithAspNet.Services
 {
-    public interface IPerson
+    public interface IPersonService
     {
+        Person Create(Person person);
+        Person FindById(long id); 
+        List<Person> FindAll();
+        Person Update(Person person);
+        void Delete(long id);
     }
 }
