@@ -2,14 +2,14 @@
 
 namespace RestWithAspNet.Model.Context
 {
-    public class MySQLcontext: DbContext
+    public class MySQLContext: DbContext
     {
-        public MySQLcontext()
+        public MySQLContext()
         {
             
         }
 
-        public MySQLcontext(DbContextOptions<MySQLcontext> options): base(options) { }
+        public MySQLContext(DbContextOptions<MySQLContext> options): base(options) { }
 
         public DbSet<Person> Persons { get; set; }
     }

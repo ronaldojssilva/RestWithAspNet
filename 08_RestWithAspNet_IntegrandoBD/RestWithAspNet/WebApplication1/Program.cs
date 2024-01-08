@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using RestWithAspNet.Model.Context;
 using RestWithAspNet.Services;
 using RestWithAspNet.Services.Implementations;
 
@@ -9,6 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 var connection = builder.Configuration["MySQLConnection:MySQLConnectionString"];
+builder.Services.AddDbContext<MySQLContext>(
+    options => options.UseMySql(connection,
+                     new MySqlServerVersion(new Version(8, 2, 0)
+    )));
+
 
 //Dependency Injection
 builder.Services.AddScoped<IPersonService, PersonServiceImplementation>();
