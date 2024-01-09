@@ -1,10 +1,16 @@
 ﻿using RestWithAspNet.Model;
+using RestWithAspNet.Model.Context;
 
 namespace RestWithAspNet.Services.Implementations
 {
     public class PersonServiceImplementation : IPersonService
     {
-        private volatile int count;
+        private MySQLContext _context;
+
+        public PersonServiceImplementation(MySQLContext context)
+        {
+            _context = context;
+        }
 
         public Person Create(Person person)
         {
@@ -18,42 +24,19 @@ namespace RestWithAspNet.Services.Implementations
 
         public List<Person> FindAll()
         {
-            List<Person> Persons = new List<Person>();
-            for (int i = 0; i < 8; i++)
-            {
-                Person person = MockPerson(i);
-                Persons.Add(person);
-            }
-            return Persons;
-        }
-
-        private Person MockPerson(int i)
-        {
-            return new Person
-            {
-                Id = IncrementAndGet(),
-                FirstName = "Person Name" + i,
-                LastName = "Person LastName" + i,
-                Address = "Some ddress" + i,
-                Gender = "Male"
-            };
+           return _context.Persons.ToList();
         }
 
         public Person FindById(long id)
         {
             return new Person
             {
-                Id = IncrementAndGet(),
+                Id = 1,
                 FirstName = "Ronaldo",
                 LastName = "Silva",
                 Address = "Fortaleza - Ceará - Brasil",
                 Gender = "Male"
             };
-        }
-
-        private long IncrementAndGet()
-        {
-            return Interlocked.Increment(ref count);
         }
 
         public Person Update(Person person)
