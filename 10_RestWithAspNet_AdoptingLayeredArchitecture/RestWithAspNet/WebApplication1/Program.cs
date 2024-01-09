@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using RestWithAspNet.Business;
 using RestWithAspNet.Business.Implementations;
 using RestWithAspNet.Model.Context;
+using RestWithAspNet.Repository;
+using RestWithAspNet.Repository.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,7 @@ builder.Services.AddApiVersioning();
 
 //Dependency Injection
 builder.Services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
+builder.Services.AddScoped<IPersonRepository, PersonRepositoryImplementation>();
 
 var app = builder.Build();
 
