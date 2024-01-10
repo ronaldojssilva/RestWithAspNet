@@ -1,9 +1,12 @@
+using EvolveDb;
 using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 using RestWithAspNet.Business;
 using RestWithAspNet.Business.Implementations;
 using RestWithAspNet.Model.Context;
 using RestWithAspNet.Repository;
 using RestWithAspNet.Repository.Implementations;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +21,36 @@ builder.Services.AddDbContext<MySQLContext>(
     options => options.UseMySql(connection,
                      new MySqlServerVersion(new Version(8, 2, 0)
     )));
+
+//Log
+Log.Logger = new LoggerConfiguration()
+	.WriteTo.Console()
+	.CreateLogger();
+
+//Migrations
+if (builder.Environment.IsDevelopment())
+{
+    MigrateDatabase(connection);
+}
+
+void MigrateDatabase(string? connection)
+{
+	try
+	{
+		var evolveConnection = new MySqlConnection(connection);
+		var evolve = new Evolve(evolveConnection, Log.Information)
+		{
+			Locations = new List<string> { "db/migrations", "db/dataset" },
+			IsEraseDisabled = true
+		};
+		evolve.Migrate();
+	}
+	catch (Exception ex)
+	{
+		Log.Error("Database migration failed", ex);
+		throw;
+	}
+}
 
 //Versioning API
 builder.Services.AddApiVersioning();
