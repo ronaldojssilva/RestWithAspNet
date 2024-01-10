@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace RestWithAspNet.Model
+namespace RestWithAspNet.Model.Base
 {
     public class BaseEntity
     {

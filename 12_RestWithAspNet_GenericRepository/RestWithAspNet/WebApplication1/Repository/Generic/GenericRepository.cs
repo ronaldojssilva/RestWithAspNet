@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
-using RestWithAspNet.Model;
+using RestWithAspNet.Model.Base;
 using RestWithAspNet.Model.Context;
-using System;
 
 namespace RestWithAspNet.Repository.Implementations
 {
