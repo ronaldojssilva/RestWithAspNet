@@ -23,33 +23,14 @@ builder.Services.AddDbContext<MySQLContext>(
     )));
 
 //Log
-Log.Logger = new LoggerConfiguration()
-	.WriteTo.Console()
-	.CreateLogger();
+//Log.Logger = new LoggerConfiguration()
+//	.WriteTo.Console()
+//	.CreateLogger();
 
 //Migrations
 if (builder.Environment.IsDevelopment())
 {
     MigrateDatabase(connection);
-}
-
-void MigrateDatabase(string? connection)
-{
-	try
-	{
-		var evolveConnection = new MySqlConnection(connection);
-		var evolve = new Evolve(evolveConnection, Log.Information)
-		{
-			Locations = new List<string> { "db/migrations", "db/dataset" },
-			IsEraseDisabled = true
-		};
-		evolve.Migrate();
-	}
-	catch (Exception ex)
-	{
-		Log.Error("Database migration failed", ex);
-		throw;
-	}
 }
 
 //Versioning API
@@ -70,3 +51,22 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+void MigrateDatabase(string? connection)
+{
+    try
+    {
+        var evolveConnection = new MySqlConnection(connection);
+        var evolve = new Evolve(evolveConnection, Log.Information)
+        {
+            Locations = new List<string> { "db/migrations", "db/dataset" },
+            IsEraseDisabled = true
+        };
+        evolve.Migrate();
+    }
+    catch (Exception ex)
+    {
+        Log.Error("Database migration failed", ex);
+        throw;
+    }
+}
