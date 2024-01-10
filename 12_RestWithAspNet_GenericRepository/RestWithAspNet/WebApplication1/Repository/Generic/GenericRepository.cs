@@ -71,7 +71,7 @@ namespace RestWithAspNet.Repository.Implementations
             {
                 try
                 {
-                    _dataset.Add(result);
+                    _dataset.Remove(result);
                     _context.SaveChanges();
                 }
                 catch (Exception)
