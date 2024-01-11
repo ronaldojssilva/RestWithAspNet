@@ -49,6 +49,7 @@ builder.Services.AddMvc(options =>
 //HATEOS
 var filterOptions = new HyperMediaFilterOptions();
 filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
+filterOptions.ContentResponseEnricherList.Add(new BookEnricher());
 builder.Services.AddSingleton(filterOptions);
 
 
@@ -69,7 +70,11 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapControllerRoute("DefaultApi", "{controller=values}/{id?}");
+//HATEOS
+//app.MapControllerRoute("DefaultApi", "{controller=values}/{id?}");
+//app.MapControllerRoute("DefaultApi", "{controller=values}/v{}/{id?}");
+app.MapControllerRoute("DefaultApi", "api/{controller=values}/v{version=apiVersion}/{id?}");
+//app.MapControllerRoute("DefaultApi", "");
 
 app.Run();
 

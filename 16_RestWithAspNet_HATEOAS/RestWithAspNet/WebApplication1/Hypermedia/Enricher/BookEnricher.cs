@@ -5,12 +5,12 @@ using System.Text;
 
 namespace RestWithAspNet.Hypermedia.Enricher
 {
-    public class PersonEnricher : ContentResponseEnricher<PersonVO>
+    public class BookEnricher : ContentResponseEnricher<BookVO>
     {
         private readonly object _lock = new object();
-        protected override Task EnrichModel(PersonVO content, IUrlHelper urlHelper)
+        protected override Task EnrichModel(BookVO content, IUrlHelper urlHelper)
         {
-            var path = "api/person";
+            var path = "api/book";
             string link = GetLink(content.Id, urlHelper, path);
             content.links.Add(new HyperMediaLink()
             {
@@ -40,18 +40,16 @@ namespace RestWithAspNet.Hypermedia.Enricher
                 Rel = RelationType.self,
                 Type = "int"
             });
-            return Task.CompletedTask;
+            return null;
         }
 
         private string GetLink(long id, IUrlHelper urlHelper, string path)
         {
             lock (_lock)
             {
-                //var url = new { controler = path, id };
+                //var url = new { controler = path, id = id };
                 var url = new { id };
-                var absoluteUrl = urlHelper.Link("DefaultApi", url);
-                absoluteUrl = new StringBuilder(absoluteUrl).Replace("%2F", "/").ToString();
-                return absoluteUrl;
+                return new StringBuilder(urlHelper.Link("DefaultApi", url)).Replace("%2F", "/").ToString();
             }
         }
     }
