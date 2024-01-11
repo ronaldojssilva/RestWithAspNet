@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
 using RestWithAspNet.Business;
 using RestWithAspNet.Business.Implementations;
+using RestWithAspNet.Hypermedia.Enricher;
+using RestWithAspNet.Hypermedia.Filter;
 using RestWithAspNet.Model.Context;
 using RestWithAspNet.Repository;
 using RestWithAspNet.Repository.Implementations;
@@ -44,6 +46,12 @@ builder.Services.AddMvc(options =>
 
 }).AddXmlSerializerFormatters();
 
+//HATEOS
+var filterOptions = new HyperMediaFilterOptions();
+filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
+builder.Services.AddSingleton(filterOptions);
+
+
 //Versioning API
 builder.Services.AddApiVersioning();
 
@@ -61,6 +69,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapControllerRoute("DefaultApi", "{controller=values}/{id?}");
 
 app.Run();
 
