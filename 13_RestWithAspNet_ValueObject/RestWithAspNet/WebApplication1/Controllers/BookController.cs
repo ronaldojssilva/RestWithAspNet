@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using RestWithAspNet.Business;
+using RestWithAspNet.Data.VO;
 using RestWithAspNet.Model;
 
 namespace WebApplication1.Controllers
@@ -34,17 +35,17 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Book Book)
+        public IActionResult Post([FromBody] BookVO book)
         {
-            if (Book == null) { return BadRequest(); }
-            return Ok(_BookBusiness.Create(Book));
+            if (book == null) { return BadRequest(); }
+            return Ok(_BookBusiness.Create(book));
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] Book Book)
+        public IActionResult Put([FromBody] BookVO book)
         {
-            if (Book == null) { return BadRequest(); }
-            return Ok(_BookBusiness.Update(Book));
+            if (book == null) { return BadRequest(); }
+            return Ok(_BookBusiness.Update(book));
         }
 
 
