@@ -7,7 +7,6 @@ namespace RestWithAspNet.Hypermedia.Enricher
 {
     public class PersonEnricher : ContentResponseEnricher<PersonVO>
     {
-        private readonly object _lock = new object();
         protected override Task EnrichModel(PersonVO content, IUrlHelper urlHelper)
         {
             var path = "api/person";
@@ -45,7 +44,7 @@ namespace RestWithAspNet.Hypermedia.Enricher
 
         private string GetLink(long id, IUrlHelper urlHelper, string path)
         {
-            lock (_lock)
+            lock (this)
             {
                 //var url = new { controler = path, id };
                 var url = new { id };
