@@ -1,4 +1,5 @@
-﻿using RestWithAspNet.Model;
+﻿using RestWithAspNet.Data.VO;
+using RestWithAspNet.Model;
 
 namespace RestWithAspNet.Business
 {
