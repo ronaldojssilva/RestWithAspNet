@@ -1,5 +1,7 @@
 using EvolveDb;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using MySqlConnector;
 using RestWithAspNet.Business;
 using RestWithAspNet.Business.Implementations;
@@ -13,10 +15,33 @@ using System.Net.Http.Headers;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var appName = "Rest API's RESTful from 0 to azure with asp.net core and Docker";
+var apiVersion = "v1";
+var apiDescription = $"API RESTful developed with '{appName}'";
+
 // Add services to the container.
+
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 builder.Services.AddControllers();
 
+//Add swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen( c =>
+{
+    c.SwaggerDoc(apiVersion, 
+        new OpenApiInfo
+        {
+            Title = appName,
+            Version = apiVersion,
+            Description = apiDescription,
+            Contact = new OpenApiContact
+            {
+                Name = "Ronaldo Silva",
+                Url = new Uri("https://github.com/ronaldojssilva/RestWithAspNet")
+            }
+        });
+});
 
 //DB Connection
 var connection = builder.Configuration["MySQLConnection:MySQLConnectionString"];
@@ -66,6 +91,18 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
+
+//Add swagger
+app.UseSwagger();//gera o json com a documentação
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json",
+        $"{appName} - {apiVersion}");
+}); // gera a pagina html para o json gerado
+var option = new RewriteOptions();
+option.AddRedirect("^$", "swagger");
+app.UseRewriter(option);
+
 
 app.UseAuthorization();
 
