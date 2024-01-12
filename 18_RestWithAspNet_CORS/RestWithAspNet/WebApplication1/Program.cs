@@ -23,6 +23,14 @@ var apiDescription = $"API RESTful developed with '{appName}'";
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
+//Add CORS
+builder.Services.AddCors(options => options.AddDefaultPolicy(builder =>
+{
+    builder.AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader();
+}));
+
 builder.Services.AddControllers();
 
 //Add swagger
@@ -91,6 +99,10 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
+
+//using CORS
+app.UseCors();
+
 
 //Add swagger
 app.UseSwagger();//gera o json com a documentação
