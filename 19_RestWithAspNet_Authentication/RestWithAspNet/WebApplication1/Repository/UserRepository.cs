@@ -21,6 +21,11 @@ namespace RestWithAspNet.Repository
             return _context.Users.FirstOrDefault(u => (u.UserName == user.UserName) && (u.Password == pass));
         }
 
+        public User ValidateCredentials(string userName)
+        {
+            return _context.Users.SingleOrDefault(u => (u.UserName == userName));
+        }
+
         public User RefreshUserInfo(User user)
         {
             if (!_context.Users.Any(u => u.Id.Equals(user.Id)))
