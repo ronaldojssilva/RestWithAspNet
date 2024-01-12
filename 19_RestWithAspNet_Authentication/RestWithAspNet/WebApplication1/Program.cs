@@ -1,17 +1,25 @@
 using EvolveDb;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MySqlConnector;
 using RestWithAspNet.Business;
 using RestWithAspNet.Business.Implementations;
+using RestWithAspNet.Configuration;
 using RestWithAspNet.Hypermedia.Enricher;
 using RestWithAspNet.Hypermedia.Filter;
 using RestWithAspNet.Model.Context;
 using RestWithAspNet.Repository;
 using RestWithAspNet.Repository.Implementations;
+using RestWithAspNet.Services;
+using RestWithAspNet.Services.Impementation;
 using Serilog;
 using System.Net.Http.Headers;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +30,41 @@ var apiDescription = $"API RESTful developed with '{appName}'";
 // Add services to the container.
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
+//authentication
+var tokenConfigurations = new TokenConfiguration();
+
+new ConfigureFromConfigurationOptions<TokenConfiguration>(
+        builder.Configuration.GetSection("TokenConfiguration")
+    ).Configure(tokenConfigurations);
+builder.Services.AddSingleton(tokenConfigurations);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = tokenConfigurations.Issuer,
+            ValidAudience = tokenConfigurations.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenConfigurations.Secret))
+        };
+    });
+
+builder.Services.AddAuthorization(auth =>
+{
+    auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+        .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+        .RequireAuthenticatedUser().Build());
+});
+
 
 //Add CORS
 builder.Services.AddCors(options => options.AddDefaultPolicy(builder =>
@@ -35,9 +78,9 @@ builder.Services.AddControllers();
 
 //Add swagger
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen( c =>
+builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc(apiVersion, 
+    c.SwaggerDoc(apiVersion,
         new OpenApiInfo
         {
             Title = appName,
@@ -92,6 +135,12 @@ builder.Services.AddApiVersioning();
 //Dependency Injection
 builder.Services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
 builder.Services.AddScoped<IBookBusiness, BookBusinessImplementation>();
+builder.Services.AddScoped<ILoginBusiness, LoginBusinessImplementation>();
+
+builder.Services.AddTransient<ITokenService, TokenService>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 
 var app = builder.Build();

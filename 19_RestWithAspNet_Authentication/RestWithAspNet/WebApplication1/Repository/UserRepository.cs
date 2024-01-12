@@ -1,7 +1,6 @@
 ﻿using RestWithAspNet.Data.VO;
 using RestWithAspNet.Model;
 using RestWithAspNet.Model.Context;
-using System.Data;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -22,7 +21,7 @@ namespace RestWithAspNet.Repository
             return _context.Users.FirstOrDefault(u => (u.UserName == user.UserName) && (u.Password == pass));
         }
 
-        public User Refresh(User user)
+        public User RefreshUserInfo(User user)
         {
             if (!_context.Users.Any(u => u.Id.Equals(user.Id)))
                 return null;
