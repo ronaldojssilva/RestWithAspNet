@@ -1,6 +1,7 @@
 ﻿using RestWithAspNet.Data.VO;
 using RestWithAspNet.Model;
 using RestWithAspNet.Model.Context;
+using System.Data;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -19,6 +20,29 @@ namespace RestWithAspNet.Repository
         {
             var pass = ComputeHash(user.Password, SHA256.Create());
             return _context.Users.FirstOrDefault(u => (u.UserName == user.UserName) && (u.Password == pass));
+        }
+
+        public User Refresh(User user)
+        {
+            if (!_context.Users.Any(u => u.Id.Equals(user.Id)))
+                return null;
+
+            var result = _context.Users.SingleOrDefault(p => p.Id.Equals(user.Id));
+            if (result != null)
+            {
+                try
+                {
+                    _context.Entry(result).CurrentValues.SetValues(user);
+                    _context.SaveChanges();
+                    return result;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+
+            return result;
         }
 
         private string ComputeHash(string input, HashAlgorithm algorithm)
