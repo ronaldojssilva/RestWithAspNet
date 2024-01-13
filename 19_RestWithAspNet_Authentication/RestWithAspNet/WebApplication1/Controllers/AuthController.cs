@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RestWithAspNet.Business;
 using RestWithAspNet.Data.VO;
+using RestWithAspNet.Model;
 
 namespace RestWithAspNet.Controllers
 {
@@ -25,6 +26,17 @@ namespace RestWithAspNet.Controllers
             if (user == null) return BadRequest("Invalid client request");
             var token = _loginBusiness.ValidateCredentials(user);
             if (token == null) return Unauthorized();
+
+            return Ok(token);
+        }
+
+        [HttpPost]
+        [Route("refresh")]
+        public IActionResult Refresh([FromBody] TokenVO tokenVO)
+        {
+            if (tokenVO is null) return BadRequest("Invalid client request");
+            var token = _loginBusiness.ValidateCredentials(tokenVO);
+            if (token == null) return BadRequest("Invalid client request");
 
             return Ok(token);
         }
