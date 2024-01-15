@@ -4,10 +4,10 @@ using RestWithAspNet.Repository.Implementations;
 
 namespace RestWithAspNet.Repository
 {
-    public class PersonRepositoty : GenericRepository<Person>, IPersonRepository
+    public class PersonRepository : GenericRepository<Person>, IPersonRepository
     {
 
-        public PersonRepositoty(MySQLContext context): base(context) { }
+        public PersonRepository(MySQLContext context): base(context) { }
 
         public Person Disable(long id)
         {
