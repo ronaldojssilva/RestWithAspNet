@@ -56,23 +56,23 @@ namespace RestWithAspNet.Business.Implementations
 
         public PagedSearchVO<PersonVO> FindWithPagedSearch(string name, string sortDirection, int pageSize, int page)
         {
-            var offSet = page > 0 ? (page - 1) * pageSize : 0;
             var sort = !string.IsNullOrWhiteSpace(sortDirection) && !sortDirection.Equals("desc") ? "asc" : "desc";
-            var size = (pageSize < 1) ? 1 : pageSize;
+            var size = (pageSize < 1) ? 10 : pageSize;
+            var offSet = page > 0 ? (page - 1) * size : 0;
 
             string query = @"select * from person p where 1=1";
-            if (!string.IsNullOrWhiteSpace(name)) query = query + $" and p.name like %'%{name}%' ";
-            query += $"order by p.firstname {sort} limit {size} offset {offSet}";
+            if (!string.IsNullOrWhiteSpace(name)) query = query + $" and p.first_name like '%{name}%' ";
+            query += $" order by p.first_name {sort} limit {size} offset {offSet}";
 
-            string countQuery = @"select * from person p where 1=1";
-            if (!string.IsNullOrWhiteSpace(name)) countQuery = countQuery + $" and p.name like %'%{name}%' ";
+            string countQuery = @"select count(*) from person p where 1=1";
+            if (!string.IsNullOrWhiteSpace(name)) countQuery = countQuery + $" and p.first_name like '%{name}%' ";
 
             var persons = _repository.FindWithPagedSearch(query);
             int totalResults = _repository.GetCount(countQuery);
 
             return new PagedSearchVO<PersonVO>
             {
-                CurrentPage = offSet,
+                CurrentPage = page,
                 List = _converter.Parse(persons),
                 PageSize = size,
                 SortDirections = sort,
