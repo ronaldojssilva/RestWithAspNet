@@ -7,7 +7,7 @@ namespace RestWithAspNet.Repository
     public class PersonRepository : GenericRepository<Person>, IPersonRepository
     {
 
-        public PersonRepository(MySQLContext context): base(context) { }
+        public PersonRepository(MySQLContext context) : base(context) { }
 
         public Person Disable(long id)
         {
@@ -28,5 +28,29 @@ namespace RestWithAspNet.Repository
             }
             return user;
         }
+
+        public List<Person> FindByName(string firstName, string lastName)
+        {
+            if (!string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
+            {
+                return _context.Persons.Where(
+                    p => p.FirstName.Contains(firstName)
+                    && p.FirstName.Contains(lastName)).ToList();
+            }
+            else if (string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
+            {
+                return _context.Persons.Where(
+                    p => p.FirstName.Contains(firstName)).ToList();
+            }
+            else if (!string.IsNullOrWhiteSpace(firstName) && string.IsNullOrWhiteSpace(lastName))
+            {
+                return _context.Persons.Where(
+                    p => p.FirstName.Contains(firstName)
+                    && p.FirstName.Contains(lastName)).ToList();
+            }
+
+            return new List<Person>();
+        }
     }
+}
 }
