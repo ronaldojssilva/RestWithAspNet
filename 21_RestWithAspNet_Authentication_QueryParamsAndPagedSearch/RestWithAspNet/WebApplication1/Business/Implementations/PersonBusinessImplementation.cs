@@ -47,5 +47,10 @@ namespace RestWithAspNet.Business.Implementations
         {
             _repository.Delete(id);
         }
+
+        public List<PersonVO> FindByName(string firstName, string lastName)
+        {
+            return _converter.Parse(_repository.FindByName(firstName, lastName));
+        }
     }
 }

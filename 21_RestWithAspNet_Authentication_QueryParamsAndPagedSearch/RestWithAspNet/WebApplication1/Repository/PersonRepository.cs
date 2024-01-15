@@ -35,22 +35,21 @@ namespace RestWithAspNet.Repository
             {
                 return _context.Persons.Where(
                     p => p.FirstName.Contains(firstName)
-                    && p.FirstName.Contains(lastName)).ToList();
+                    && p.LastName.Contains(lastName)).ToList();
             }
             else if (string.IsNullOrWhiteSpace(firstName) && !string.IsNullOrWhiteSpace(lastName))
             {
                 return _context.Persons.Where(
-                    p => p.FirstName.Contains(firstName)).ToList();
+                    p => p.LastName.Contains(lastName)).ToList();
             }
             else if (!string.IsNullOrWhiteSpace(firstName) && string.IsNullOrWhiteSpace(lastName))
             {
                 return _context.Persons.Where(
-                    p => p.FirstName.Contains(firstName)
-                    && p.FirstName.Contains(lastName)).ToList();
+                    p => p.FirstName.Contains(firstName)).ToList();
             }
 
-            return new List<Person>();
+            return null;
         }
     }
 }
-}
+
