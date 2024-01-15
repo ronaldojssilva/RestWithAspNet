@@ -1,4 +1,5 @@
 ﻿using RestWithAspNet.Data.VO;
+using RestWithAspNet.Hypermedia.Util;
 using RestWithAspNet.Model;
 
 namespace RestWithAspNet.Business
@@ -6,8 +7,13 @@ namespace RestWithAspNet.Business
     public interface IPersonBusiness
     {
         PersonVO Create(PersonVO person);
+
         PersonVO FindById(long id); 
+
+        PagedSearchVO<PersonVO> FindWithPagedSearch(string name, string sortDirection, int pageSize, int page);
+
         List<PersonVO> FindAll();
+
         PersonVO Update(PersonVO person);
 
         PersonVO Disable(long id);
