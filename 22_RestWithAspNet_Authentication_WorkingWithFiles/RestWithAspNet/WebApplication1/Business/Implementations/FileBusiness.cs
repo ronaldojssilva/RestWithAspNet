@@ -18,9 +18,29 @@ namespace RestWithAspNet.Business.Implementations
             throw new NotImplementedException();
         }
 
-        public Task<FileDatailVO> SavaFileToDisk(IFormFile formFile)
+        public async Task<FileDatailVO> SavaFileToDisk(IFormFile file)
         {
-            throw new NotImplementedException();
+            FileDatailVO fileDatail = new FileDatailVO();
+            var fileType = Path.GetExtension(file.FileName);
+            var baseUrl = _context.HttpContext.Request.Host;
+
+            if (fileType.ToLower() == ".pdf" || fileType.ToLower() == ".jpg" ||
+                fileType.ToLower() == ".png" || fileType.ToLower() == ".jpeg")
+            {
+                var docName = Path.GetFileName(file.FileName);
+                if (file != null && file.Length > 0)
+                {
+                    var destination = Path.Combine(_basePath, "", docName);
+                    fileDatail.DocumentName = docName;
+                    fileDatail.DocType = fileType;
+                    fileDatail.DocUrl = Path.Combine(baseUrl + "/api/file/v1" + fileDatail.DocumentName);
+
+                    using var stream = new FileStream(destination, FileMode.Create);
+                    await file.CopyToAsync(stream);
+                }
+            }
+
+            return fileDatail;
         }
 
         public Task<List<FileDatailVO>> SavaFileToList(IList<IFormFile> files)
