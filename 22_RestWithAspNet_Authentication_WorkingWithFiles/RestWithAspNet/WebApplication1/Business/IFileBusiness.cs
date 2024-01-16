@@ -5,8 +5,8 @@ namespace RestWithAspNet.Business
     public interface IFileBusiness
     {
         public byte[] GetFile(string fileName);
-
-        public Task<FileDatailVO> SavaFileToDisk(IFormFile formFile);
+        Task<List<FileDatailVO>> SaveFilesToDisk(List<IFormFile> files);
+        public Task<FileDatailVO> SaveFileToDisk(IFormFile formFile);
 
         public Task<List<FileDatailVO>> SavaFileToList(IList<IFormFile> files);
 

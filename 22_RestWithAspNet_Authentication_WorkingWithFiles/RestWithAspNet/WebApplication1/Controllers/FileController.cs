@@ -26,8 +26,19 @@ namespace RestWithAspNet.Controllers
         [Produces("application/json")]
         public async Task<IActionResult> UploadOneFile([FromForm] IFormFile file)
         {
-            FileDatailVO detail = await _fileBusiness.SavaFileToDisk(file);
+            FileDatailVO detail = await _fileBusiness.SaveFileToDisk(file);
             return new ObjectResult(detail);
+        }
+
+        [HttpPost("uploadManyFiles")]
+        [ProducesResponseType(200, Type = typeof(List<FileDatailVO>))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        [Produces("application/json")]
+        public async Task<IActionResult> UploadManyFiles([FromForm] List<IFormFile> files)
+        {
+            List<FileDatailVO> details = await _fileBusiness.SaveFilesToDisk(files);
+            return new ObjectResult(details);
         }
     }
 }

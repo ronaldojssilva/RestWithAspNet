@@ -18,7 +18,17 @@ namespace RestWithAspNet.Business.Implementations
             throw new NotImplementedException();
         }
 
-        public async Task<FileDatailVO> SavaFileToDisk(IFormFile file)
+        public async Task<List<FileDatailVO>> SaveFilesToDisk(List<IFormFile> files)
+        {
+            List<FileDatailVO> list = new List<FileDatailVO>();
+            foreach (IFormFile file in files)
+            {
+                list.Add(await SaveFileToDisk(file));
+            }
+            return list;
+        }
+
+        public async Task<FileDatailVO> SaveFileToDisk(IFormFile file)
         {
             FileDatailVO fileDatail = new FileDatailVO();
             var fileType = Path.GetExtension(file.FileName);
@@ -33,7 +43,7 @@ namespace RestWithAspNet.Business.Implementations
                     var destination = Path.Combine(_basePath, "", docName);
                     fileDatail.DocumentName = docName;
                     fileDatail.DocType = fileType;
-                    fileDatail.DocUrl = Path.Combine(baseUrl + "/api/file/v1" + fileDatail.DocumentName);
+                    fileDatail.DocUrl = Path.Combine(baseUrl + "/api/file/v1/" + fileDatail.DocumentName);
 
                     using var stream = new FileStream(destination, FileMode.Create);
                     await file.CopyToAsync(stream);
