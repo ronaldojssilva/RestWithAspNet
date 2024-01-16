@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  restwithaspnet:
+    image: ${DOCKER_REGISTRY-}restwithaspnet
+    build:
+      context: .
+      dockerfile: WebApplication1/Dockerfile
