@@ -107,11 +107,11 @@ builder.Services.AddDbContext<MySQLContext>(
 //	.WriteTo.Console()
 //	.CreateLogger();
 
-//Migrations
-if (builder.Environment.IsDevelopment())
-{
-    MigrateDatabase(connection);
-}
+//Migrations (Evolve)
+//if (builder.Environment.IsDevelopment())
+//{
+//    MigrateDatabase(connection);
+//}
 
 //Content negotiation
 builder.Services.AddMvc(options =>

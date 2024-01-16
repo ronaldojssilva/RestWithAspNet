@@ -24,11 +24,11 @@ services:
     build:
       context: .
       dockerfile: WebApplication1/Dockerfile
-    enviroment:
+    environment:
       TZ: America/Sao_Paulo
       ASPNETCORE_ENVIRONMENT: Production
     ports:
-      - 44336:80
+      - 44336:8080
     depends_on:
       - db
     networks:
