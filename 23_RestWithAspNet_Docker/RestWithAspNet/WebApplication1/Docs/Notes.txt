@@ -1,0 +1,8 @@
+Seção 23
+  Enviando imagem para o DockerHub
+    docker images
+	docker login docker.io
+	docker tag rest-with-asp-net:latest ronaldojssilva/rest-with-asp-net:latest
+	docker tag rest-with-asp-net-db:latest ronaldojssilva/rest-with-asp-net-db:latest
+	docker push ronaldojssilva/rest-with-asp-net-db
+	docker push ronaldojssilva/rest-with-asp-net

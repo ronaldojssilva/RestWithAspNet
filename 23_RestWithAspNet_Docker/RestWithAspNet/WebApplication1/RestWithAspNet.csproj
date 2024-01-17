@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <Folder Include="ci\" />
+    <Folder Include="Docs\" />
     <Folder Include="UploadDir\" />
   </ItemGroup>
 
