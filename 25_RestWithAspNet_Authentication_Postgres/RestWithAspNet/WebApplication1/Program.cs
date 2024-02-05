@@ -7,7 +7,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using MySqlConnector;
 using RestWithAspNet.Business;
 using RestWithAspNet.Business.Implementations;
 using RestWithAspNet.Configuration;
@@ -19,7 +18,6 @@ using RestWithAspNet.Repository.Implementations;
 using RestWithAspNet.Services;
 using RestWithAspNet.Services.Impementation;
 using Serilog;
-using System.Net.Http.Headers;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -96,11 +94,9 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 //DB Connection
-var connection = builder.Configuration["MySQLConnection:MySQLConnectionString"];
-builder.Services.AddDbContext<MySQLContext>(
-    options => options.UseMySql(connection,
-                     new MySqlServerVersion(new Version(8, 2, 0)
-    )));
+var connection = builder.Configuration["PostgresConnection:PostgresConnectionString"];
+builder.Services.AddDbContext<PostgresSQLContext>(
+    options => options.UseNpgsql(connection));
 
 //Log
 //Log.Logger = new LoggerConfiguration()
@@ -150,6 +146,9 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(GenericRepository<>));
 
 var app = builder.Build();
 
+//enable Legacy Timestamp behavoour for postgres
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 // Configure the HTTP request pipeline.
 
 app.UseHttpsRedirection();
@@ -185,7 +184,7 @@ void MigrateDatabase(string? connection)
 {
     try
     {
-        var evolveConnection = new MySqlConnection(connection);
+        var evolveConnection = new Npgsql.NpgsqlConnection(connection);
         var evolve = new Evolve(evolveConnection, Log.Information)
         {
             Locations = new List<string> { "db/migrations", "db/dataset" },
