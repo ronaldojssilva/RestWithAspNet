@@ -7,7 +7,7 @@ namespace RestWithAspNet.Repository
     public class PersonRepository : GenericRepository<Person>, IPersonRepository
     {
 
-        public PersonRepository(MySQLContext context) : base(context) { }
+        public PersonRepository(MSSQLContext context) : base(context) { }
 
         public Person Disable(long id)
         {

@@ -6,10 +6,10 @@ namespace RestWithAspNet.Repository.Implementations
 {
     public class GenericRepository<T> : IRepository<T> where T : BaseEntity
     {
-        protected MySQLContext _context;
+        protected MSSQLContext _context;
         private DbSet<T> _dataset;
 
-        public GenericRepository(MySQLContext context)
+        public GenericRepository(MSSQLContext context)
         {
             _context = context;
             _dataset = _context.Set<T>();

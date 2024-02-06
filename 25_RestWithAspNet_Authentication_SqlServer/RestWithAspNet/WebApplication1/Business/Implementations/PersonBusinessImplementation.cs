@@ -59,10 +59,14 @@ namespace RestWithAspNet.Business.Implementations
             var sort = !string.IsNullOrWhiteSpace(sortDirection) && !sortDirection.Equals("desc") ? "asc" : "desc";
             var size = (pageSize < 1) ? 10 : pageSize;
             var offSet = page > 0 ? (page - 1) * size : 0;
-
+            //selserver
             string query = @"select * from person p where 1=1";
             if (!string.IsNullOrWhiteSpace(name)) query = query + $" and p.first_name like '%{name}%' ";
-            query += $" order by p.first_name {sort} limit {size} offset {offSet}";
+            query += $" order by p.first_name {sort} OFFSET {offSet} ROWS FETCH NEXT {size} ROWS ONLY";
+            //postgres
+            //string query = @"select * from person p where 1=1";
+            //if (!string.IsNullOrWhiteSpace(name)) query = query + $" and p.first_name like '%{name}%' ";
+            //query += $" order by p.first_name {sort} limit {size} offset {offSet}";
 
             string countQuery = @"select count(*) from person p where 1=1";
             if (!string.IsNullOrWhiteSpace(name)) countQuery = countQuery + $" and p.first_name like '%{name}%' ";
