@@ -1,8 +1,13 @@
 import React from 'react';
+import Header from './Header';
 
 function App() {
   return ( 
-    <h1>Hello world</h1>
+    <Header>
+      Client REST - Properties
+    </Header>
+    // <Header title="Client REST Udemy"/>
+
    );
 }
 
