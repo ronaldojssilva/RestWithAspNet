@@ -12,7 +12,7 @@ export default function NewBook(){
     
     const [author, setAuthor] = useState('');
     const [title, setTitle] = useState('');
-    const [lauchDate, setLauchDate] = useState('');
+    const [launchDate, setLaunchDate] = useState('');
     const [price, setPrice] = useState('');
 
     const navigate = useNavigate();
@@ -23,7 +23,7 @@ export default function NewBook(){
         const data = {
             author,
             title,
-            lauchDate,
+            launchDate,
             price,
         }
 
@@ -69,8 +69,8 @@ export default function NewBook(){
                     />
                     <input 
                         type="date" 
-                        value={lauchDate}
-                        onChange={e => setLauchDate(e.target.value)}
+                        value={launchDate}
+                        onChange={e => setLaunchDate(e.target.value)}
                     />
                     <input 
                         placeholder="Price" 
