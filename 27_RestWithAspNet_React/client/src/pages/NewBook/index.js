@@ -18,15 +18,15 @@ export default function NewBook(){
                         <FiArrowLeft size={16} color="#251fc5" />
                         Home
                     </Link>
-                    <form>
-                        <input placeholder="Title" />
-                        <input placeholder="Author" />
-                        <input type="date" />
-                        <input placeholder="Price" />
-
-                        <button className="button" type="submit">Add</button>
-                    </form>
                 </section>
+                <form>
+                    <input placeholder="Title" />
+                    <input placeholder="Author" />
+                    <input type="date" />
+                    <input placeholder="Price" />
+
+                    <button className="button" type="submit">Add</button>
+                </form>
             </div>
         </div>
     );
