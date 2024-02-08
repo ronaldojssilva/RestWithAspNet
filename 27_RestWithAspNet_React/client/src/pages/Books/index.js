@@ -11,29 +11,32 @@ import logoImage from '../../assets/logo.svg'
 export default function Books(){
 
     const [books, setBooks] = useState([]);
+    const [page, setPage] = useState(0);
 
     const userName = localStorage.getItem('userName');
     const accessToken = localStorage.getItem('accessToken');
 
-    const navigate = useNavigate();
+    const authorization =
+    {
+        headers:{
+            Authorization: `Bearer ${accessToken}`
+        }
+    }
 
+    const navigate = useNavigate();
     useEffect(() =>{
-        api.get('api/book/v1/asc/20/1', {
-                headers:{
-                    Authorization: `Bearer ${accessToken}`
-                }
-            }).then(response => {
-                setBooks(response.data.list)
-            })
+        fetchMoreBooks();
     }, [accessToken]);
+
+    async function fetchMoreBooks(){
+        const response = await api.get(`api/book/v1/asc/4/${page}`, authorization);
+        setBooks([...books, ...response.data.list]);
+        setPage(page + 1);
+    }
 
     async function logout(id){
         try {
-            await api.get(`api/auth/v1/revoke`, {
-                headers:{
-                    Authorization: `Bearer ${accessToken}`
-                }
-            });
+            await api.get(`api/auth/v1/revoke`,authorization);
 
             localStorage.clear();
             navigate('/');
@@ -55,11 +58,7 @@ export default function Books(){
 
     async function deleteBook(id){
         try {
-            await api.delete(`api/book/v1/${id}`, {
-                headers:{
-                    Authorization: `Bearer ${accessToken}`
-                }
-            });
+            await api.delete(`api/book/v1/${id}`, authorization);
 
             setBooks(books.filter(book => book.id !== id))
 
@@ -102,6 +101,9 @@ export default function Books(){
                     </li>
                 ))}                
             </ul>
+
+            <button className="button" onClick={fetchMoreBooks} type="button">Load More</button>
+
         </div>
     );
 }
